@@ -1,67 +1,125 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Sidebar from '@/components/dashboard/Sidebar';
+import Header from '@/components/landing/Header';
 import AccountingStatus from '@/components/dashboard/AccountingStatus';
 import SPDetails from '@/components/dashboard/SPDetails';
 import IDStatus from '@/components/dashboard/IDStatus';
 import DistributorDetails from '@/components/dashboard/DistributorDetails';
 import {
-    SUCCESS_MESSAGE,
-    WELCOME_PREFIX,
-    WELCOME_QUOTE,
-    TOP_NAV,
-    REWARD_RANK_LABEL,
-    NEW_MEMBER,
-    REWARD_SP_LABEL,
-    LEFT_SP_LABEL,
-    RIGHT_SP_LABEL,
-    ORG_LINK_PREFIX,
-    COPY_ORG1_BTN,
-    COPY_ORG2_BTN,
     COMPANY_NAME,
+    TAGLINE,
     LOGIN_BUTTON_TEXT,
     CONTACT_INFO,
 } from '@/constants';
+import {
+    SUCCESS_MESSAGE,
+    WELCOME_PREFIX,
+    WELCOME_QUOTE,
+    ORG_LINK_PREFIX,
+    COPY_ORG1_BTN,
+    COPY_ORG2_BTN,
+    REWARD_RANK_LABEL,
+    LEFT_SP_LABEL,
+    RIGHT_SP_LABEL,
+    TOP_NAV,
+} from '@/constants/dashboard';
+import { getCurrentUser, getUserData, isLoggedIn, logout } from '@/lib/auth';
 import { copyToClipboard } from '@/lib/utils';
 
-// Mock data - in real app this would come from API
-const mockDashboardData = {
-    user: {
-        name: 'Santosh Walanj',
-        rewardRank: NEW_MEMBER,
-        rewardSP: '0.00',
-        leftSP: '0.00',
-        rightSP: '0.00',
-    },
-    accounting: {
-        productFundBalance: '0.00',
-        conOfferBalance: '0.00',
-        grossIncome: '0.00',
-    },
-    spDetails: {
-        fresh: '0.00/0.0',
-        cf: '25 /0',
-        directSP: '15 /0',
-        selfSP: '0.00',
-    },
-    idStatus: {
-        status: 'Active' as const,
-        doi: '12-07-2025 09:27:05 AM',
-        doa: '',
-        validityDate: '00-00-0000',
-    },
-    distributor: {
-        name: 'Santosh Walanj',
-        sponsorId: 'RM5064752',
-    },
-};
-
 export default function Dashboard() {
+    const router = useRouter();
+    const [userData, setUserData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [copiedLink, setCopiedLink] = useState<number | null>(null);
+
+    useEffect(() => {
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            router.push('/login');
+            return;
+        }
+
+        // Get current user
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+            // Get full user data
+            const fullUserData = getUserData(currentUser.userId);
+            if (fullUserData) {
+                setUserData(fullUserData);
+            }
+        }
+        setLoading(false);
+    }, [router]);
+
     const handleCopyLink = (linkNumber: number) => {
         const link = `${ORG_LINK_PREFIX}${linkNumber === 1 ? 'r' : 'g'}`;
         copyToClipboard(link);
+        setCopiedLink(linkNumber);
+        setTimeout(() => setCopiedLink(null), 2000);
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-amber-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="text-4xl mb-4 text-amber-900">⏳</div>
+                    <p className="text-amber-900 font-semibold">Loading dashboard...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!userData) {
+        return (
+            <div className="min-h-screen bg-amber-50 flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-amber-900">User data not found. Please log in again.</p>
+                    <Link href="/login" className="text-orange-600 underline mt-4 inline-block">Go to Login</Link>
+                </div>
+            </div>
+        );
+    }
+
+    // Create dashboard data from user data
+    const dashboardData = {
+        user: {
+            name: userData.applicantName || 'User',
+            rewardRank: 'New Member',
+            leftSP: '0.0',
+            rightSP: '0.0'
+        },
+        accounting: {
+            productFundBalance: '0.00',
+            conOfferBalance: '0.00',
+            grossIncome: '0.00'
+        },
+        spDetails: {
+            fresh: '0.00 / 0.0',
+            cf: '0 / 0',
+            directSP: '0 / 0',
+            selfSP: '0.00'
+        },
+        idStatus: {
+            status: 'Active' as const,
+            doi: userData.registeredAt ? (
+                new Date(userData.registeredAt).toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                }) + ' ' + new Date(userData.registeredAt).toLocaleTimeString('en-IN')
+            ) : 'N/A',
+            doa: '',
+            validityDate: '00-00-0000'
+        },
+        distributor: {
+            name: userData.applicantName || 'User',
+            sponsorId: userData.sponsorId || 'N/A'
+        }
     };
 
     return (
@@ -83,7 +141,7 @@ export default function Dashboard() {
                     />
                     <div className="text-sm">
                         <div className="font-bold text-amber-950">{COMPANY_NAME}</div>
-                        <div className="text-xs text-amber-800">TOUR AND TRAVELS</div>
+                        <div className="text-xs text-amber-800">{TAGLINE}</div>
                     </div>
                 </div>
 
@@ -99,12 +157,15 @@ export default function Dashboard() {
                     ))}
                 </nav>
 
-                <Link
-                    href="/"
+                <button
+                    onClick={() => {
+                        logout();
+                        router.push('/login');
+                    }}
                     className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
                 >
-                    {LOGIN_BUTTON_TEXT}
-                </Link>
+                    Logout
+                </button>
             </header>
 
             {/* Main Content - Full height with flex */}
@@ -114,27 +175,29 @@ export default function Dashboard() {
                 <main className="flex-1 p-6 md:p-10 overflow-y-auto">
                     {/* Welcome Section */}
                     <div className="mb-10">
-                        <h1 className="text-2xl md:text-3xl font-bold text-amber-950 mb-6">
-                            {WELCOME_PREFIX} &apos;{mockDashboardData.user.name}
-                        </h1>
+                        <div className="flex justify-between items-center mb-6">
+                            <h1 className="text-2xl md:text-3xl font-bold text-amber-950">
+                                {WELCOME_PREFIX} '{dashboardData.user.name}'
+                            </h1>
+                        </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div className="bg-white p-4 rounded-lg shadow-sm">
-                                <div className="text-sm text-amber-900">{REWARD_RANK_LABEL}</div>
+                            <div className="bg-white p-6 rounded-lg shadow-sm">
+                                <div className="text-sm text-amber-900 mb-2">{REWARD_RANK_LABEL}</div>
                                 <div className="font-semibold text-amber-950">
-                                    {mockDashboardData.user.rewardRank}
+                                    {dashboardData.user.rewardRank}
                                 </div>
                             </div>
-                            <div className="bg-white p-4 rounded-lg shadow-sm">
-                                <div className="text-sm text-amber-900">{LEFT_SP_LABEL}</div>
+                            <div className="bg-white p-6 rounded-lg shadow-sm">
+                                <div className="text-sm text-amber-900 mb-2">{LEFT_SP_LABEL}</div>
                                 <div className="font-semibold text-amber-950">
-                                    {mockDashboardData.user.leftSP}
+                                    {dashboardData.user.leftSP}
                                 </div>
                             </div>
-                            <div className="bg-white p-4 rounded-lg shadow-sm">
-                                <div className="text-sm text-amber-900">{RIGHT_SP_LABEL}</div>
+                            <div className="bg-white p-6 rounded-lg shadow-sm">
+                                <div className="text-sm text-amber-900 mb-2">{RIGHT_SP_LABEL}</div>
                                 <div className="font-semibold text-amber-950">
-                                    {mockDashboardData.user.rightSP}
+                                    {dashboardData.user.rightSP}
                                 </div>
                             </div>
                         </div>
@@ -145,32 +208,32 @@ export default function Dashboard() {
 
                         {/* Organization Links */}
                         <div className="flex flex-col md:flex-row gap-6 mb-8">
-                            <div className="flex-1 flex gap-2">
+                            <div className="flex-1 flex gap-4">
                                 <input
                                     type="text"
                                     value={`${ORG_LINK_PREFIX}r`}
                                     readOnly
-                                    className="flex-1 px-4 py-2 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
+                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
                                 />
                                 <button
                                     onClick={() => handleCopyLink(1)}
-                                    className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap"
+                                    className={`${copiedLink === 1 ? 'bg-green-600' : 'bg-orange-600'} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-colors whitespace-nowrap`}
                                 >
-                                    {COPY_ORG1_BTN}
+                                    {copiedLink === 1 ? 'Copied!' : COPY_ORG1_BTN}
                                 </button>
                             </div>
-                            <div className="flex-1 flex gap-2">
+                            <div className="flex-1 flex gap-4">
                                 <input
                                     type="text"
                                     value={`${ORG_LINK_PREFIX}g`}
                                     readOnly
-                                    className="flex-1 px-4 py-2 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
+                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
                                 />
                                 <button
                                     onClick={() => handleCopyLink(2)}
-                                    className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap"
+                                    className={`${copiedLink === 2 ? 'bg-green-600' : 'bg-orange-600'} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-colors whitespace-nowrap`}
                                 >
-                                    {COPY_ORG2_BTN}
+                                    {copiedLink === 2 ? 'Copied!' : COPY_ORG2_BTN}
                                 </button>
                             </div>
                         </div>
@@ -178,19 +241,19 @@ export default function Dashboard() {
 
                     {/* Dashboard Cards Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        <AccountingStatus data={mockDashboardData.accounting} />
-                        <SPDetails data={mockDashboardData.spDetails} />
-                        <IDStatus data={mockDashboardData.idStatus} />
+                        <AccountingStatus data={dashboardData.accounting} />
+                        <SPDetails data={dashboardData.spDetails} />
+                        <IDStatus data={dashboardData.idStatus} />
                     </div>
 
                     {/* Distributor Details */}
-                    <DistributorDetails data={mockDashboardData.distributor} />
+                    <DistributorDetails data={dashboardData.distributor} />
                 </main>
             </div>
 
             {/* Footer */}
             <footer className="bg-amber-900 text-white py-6 px-4 md:px-8 mt-8">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <div className="flex items-center gap-2">
                         <span className="text-xl">📞</span>
                         <span className="font-semibold">
@@ -198,7 +261,7 @@ export default function Dashboard() {
                         </span>
                     </div>
 
-                    <div className="text-center md:text-left text-sm">
+                    <div className="text-sm">
                         <p>{CONTACT_INFO.address}</p>
                         <p>{CONTACT_INFO.address2}</p>
                     </div>

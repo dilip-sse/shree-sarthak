@@ -9,7 +9,7 @@ export const SIDEBAR_NAV: NavItem[] = [
     { label: 'My Account', href: '/my-account' },
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Joining & Upgrade', href: '/dashboard/joining' },
-    { label: 'My Netorik', href: '/dashboard/netorik' },
+    { label: 'My Network', href: '/dashboard/network' },
     { label: 'My Team Income', href: '/dashboard/income' },
     { label: 'Help & Support', href: '/dashboard/support' },
 ];

@@ -79,9 +79,9 @@ export default function MyAccount() {
                         {/* Account Details Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                             {/* Membership Info */}
-                            <div className="bg-amber-50 p-4 rounded-lg">
-                                <h3 className="font-bold text-amber-950 mb-3 text-lg">Membership Information</h3>
-                                <div className="space-y-2 text-sm">
+                            <div className="bg-amber-50 p-6 rounded-lg">
+                                <h3 className="font-bold text-amber-950 mb-4 text-lg">Membership Information</h3>
+                                <div className="space-y-3 text-sm">
                                     <div className="flex justify-between">
                                         <span className="text-amber-800">Reward Rank:</span>
                                         <span className="font-semibold text-amber-950">{USER_DATA.rewardRank}</span>
@@ -98,9 +98,9 @@ export default function MyAccount() {
                             </div>
 
                             {/* Contact Info */}
-                            <div className="bg-amber-50 p-4 rounded-lg">
-                                <h3 className="font-bold text-amber-950 mb-3 text-lg">Contact Information</h3>
-                                <div className="space-y-2 text-sm">
+                            <div className="bg-amber-50 p-6 rounded-lg">
+                                <h3 className="font-bold text-amber-950 mb-4 text-lg">Contact Information</h3>
+                                <div className="space-y-3 text-sm">
                                     <div>
                                         <span className="text-amber-800 block">Address:</span>
                                         <span className="font-semibold text-amber-950">{USER_DATA.address}</span>
@@ -118,25 +118,25 @@ export default function MyAccount() {
                     <div className="mb-8">
                         <h3 className="text-xl md:text-2xl font-bold text-amber-950 mb-6">Organization Links</h3>
                         <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-                            <div className="flex-1 flex gap-2">
+                            <div className="flex-1 flex gap-4">
                                 <input
                                     type="text"
                                     value="http://www.myriyansh.com/r/gr"
                                     readOnly
-                                    className="flex-1 px-4 py-2 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
+                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
                                 />
-                                <button className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap">
+                                <button className="bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap">
                                     Copy Org 1 Link
                                 </button>
                             </div>
-                            <div className="flex-1 flex gap-2">
+                            <div className="flex-1 flex gap-4">
                                 <input
                                     type="text"
                                     value="http://www.myriyansh.com/r/gg"
                                     readOnly
-                                    className="flex-1 px-4 py-2 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
+                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
                                 />
-                                <button className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap">
+                                <button className="bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap">
                                     Copy Org 2 Link
                                 </button>
                             </div>
@@ -229,7 +229,7 @@ export default function MyAccount() {
 
                     {/* Quick Actions */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                        <button className="bg-amber-900 text-white p-4 rounded-lg font-semibold hover:bg-amber-800 transition-colors flex items-center justify-center gap-2">
+                        <button className="bg-amber-900 text-white p-6 rounded-lg font-semibold hover:bg-amber-800 transition-colors flex items-center justify-center gap-2">
                             <span className="text-xl">✏️</span>
                             Edit Profile
                         </button>
@@ -237,7 +237,7 @@ export default function MyAccount() {
                             <span className="text-xl">🔒</span>
                             Change Password
                         </button>
-                        <button className="bg-red-600 text-white p-4 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
+                        <button className="bg-red-600 text-white p-6 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
                             <span className="text-xl">🚪</span>
                             Logout
                         </button>

@@ -13,7 +13,7 @@ export default function Sidebar() {
         <aside className="w-full md:w-64 bg-gradient-to-b from-amber-900 to-amber-950 text-white flex-shrink-0 md:min-h-screen md:sticky md:top-0 md:self-start overflow-y-auto">
             {/* Logo Section */}
             <div className="p-6 border-b border-white/20">
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                     <Image
                         src="/images/logo.png"
                         alt="Logo"
@@ -25,7 +25,7 @@ export default function Sidebar() {
                         <div className="font-bold">{COMPANY_NAME}</div>
                         <div className="text-xs text-amber-200">{TAGLINE}</div>
                     </div>
-                </div>
+                </div> */}
             </div>
 
             {/* Navigation */}
@@ -47,7 +47,7 @@ export default function Sidebar() {
                                 {item.label === 'My Account' && '👤'}
                                 {item.label === 'Dashboard' && '📊'}
                                 {item.label === 'Joining & Upgrade' && '👥'}
-                                {item.label === 'My Netorik' && '📷'}
+                                {item.label === 'My Network' && '🌐'}
                                 {item.label === 'My Team Income' && '💰'}
                                 {item.label === 'Help & Support' && '🎁'}
                             </span>
