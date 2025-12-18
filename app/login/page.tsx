@@ -18,7 +18,6 @@ export default function LoginPage() {
         setError('');
         setLoading(true);
 
-        console.log(username, password);
 
         const result = login({ username, password });
 
