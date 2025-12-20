@@ -38,22 +38,34 @@ export default function Dashboard() {
     const [copiedLink, setCopiedLink] = useState<number | null>(null);
 
     useEffect(() => {
-        // Check if user is logged in
-        if (!isLoggedIn()) {
-            router.push('/login');
-            return;
-        }
-
-        // Get current user
-        const currentUser = getCurrentUser();
-        if (currentUser) {
-            // Get full user data
-            const fullUserData = getUserData(currentUser.userId);
-            if (fullUserData) {
-                setUserData(fullUserData);
+        const initializeDashboard = async () => {
+            // Check if user is logged in
+            if (!isLoggedIn()) {
+                router.push('/login');
+                return;
             }
-        }
-        setLoading(false);
+
+            // Get current user session
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                try {
+                    // Fetch full user data from MongoDB
+                    const response = await fetch(`/api/users/${currentUser.userId}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        setUserData(data.user);
+                    } else {
+                        console.error('User data not found in MongoDB');
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch dashboard user data:', error);
+                }
+            }
+            setLoading(false);
+        };
+
+        initializeDashboard();
     }, [router]);
 
     const handleCopyLink = (linkNumber: number) => {

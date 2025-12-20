@@ -11,10 +11,21 @@ export default function NetworkPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch users from localStorage on client side
-        const registeredUsers = getUsersFromLocalStorage();
-        setUsers(registeredUsers);
-        setLoading(false);
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+                if (data.success) {
+                    setUsers(data.users);
+                }
+            } catch (error) {
+                console.error('Failed to fetch network users:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
     }, []);
 
     return (

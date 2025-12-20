@@ -53,25 +53,37 @@ export default function RegistrationPage() {
         setFormData(prev => ({ ...prev, gender }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Generate user ID from date of birth
         const userId = generateUserId(formData.dateOfBirth);
 
-        // Create registered user object
-        const registeredUser: RegisteredUser = {
-            ...formData,
-            userId,
-            registeredAt: new Date().toISOString(),
-        };
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    userId,
+                }),
+            });
 
-        // Save to localStorage
-        saveUserToLocalStorage(registeredUser);
+            const result = await response.json();
 
-        // Show success
-        setGeneratedUserId(userId);
-        setSubmitted(true);
+            if (result.success) {
+                // Show success
+                setGeneratedUserId(userId);
+                setSubmitted(true);
+            } else {
+                alert(result.error || 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Registration failed:', error);
+            alert('An error occurred during registration. Please try again.');
+        }
     };
 
     if (submitted) {
@@ -249,6 +261,7 @@ export default function RegistrationPage() {
                                         <input
                                             type="radio"
                                             name="gender"
+                                            required
                                             checked={formData.gender === 'Female'}
                                             onChange={() => handleGenderChange('Female')}
                                             className="w-5 h-5 text-amber-600 focus:ring-amber-500"
@@ -269,6 +282,7 @@ export default function RegistrationPage() {
                                     value={formData.email}
                                     onChange={handleInputChange}
                                     placeholder="Enter Email"
+                                    required
                                     className="w-full px-4 py-3 border-2 border-amber-200 rounded-lg focus:border-amber-500 focus:outline-none transition-colors"
                                 />
                             </div>
@@ -284,6 +298,7 @@ export default function RegistrationPage() {
                                     value={formData.city}
                                     onChange={handleInputChange}
                                     placeholder="Enter City"
+                                    required
                                     className="w-full px-4 py-3 border-2 border-amber-200 rounded-lg focus:border-amber-500 focus:outline-none transition-colors"
                                 />
                             </div>
@@ -298,7 +313,6 @@ export default function RegistrationPage() {
                                     value={formData.address}
                                     onChange={handleInputChange}
                                     placeholder="Enter Address"
-                                    required
                                     rows={4}
                                     className="w-full px-4 py-3 border-2 border-amber-200 rounded-lg focus:border-amber-500 focus:outline-none transition-colors resize-none"
                                 />

@@ -13,21 +13,34 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setLoading(true);
 
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
 
-        const result = login({ username, password });
+            const result = await response.json();
 
-        console.log(result);
-
-        if (result.success) {
-            // Redirect to dashboard
-            router.push('/dashboard');
-        } else {
-            setError(result.error || 'Login failed');
+            if (result.success) {
+                // Store user session in localStorage for front-end access
+                localStorage.setItem('current_user', JSON.stringify(result.user));
+                // Redirect to dashboard
+                router.push('/dashboard');
+            } else {
+                setError(result.error || 'Login failed');
+                setLoading(false);
+            }
+        } catch (err) {
+            console.error('Login Error:', err);
+            setError('An error occurred during login. Please try again.');
             setLoading(false);
         }
     };
