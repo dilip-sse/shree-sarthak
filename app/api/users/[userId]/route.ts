@@ -4,11 +4,11 @@ import User from '@/models/User';
 
 export async function GET(
     request: Request,
-    { params }: { params: { userId: string } }
+    props: { params: Promise<{ userId: string }> }
 ) {
     try {
         await dbConnect();
-        const { userId } = params;
+        const { userId } = await props.params;
 
         const user = await User.findOne({ userId });
 
