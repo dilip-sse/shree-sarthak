@@ -36,15 +36,19 @@ const UserSchema = new Schema({
     gender: {
         type: String,
         enum: ['Male', 'Female'],
+        required: [true, 'Please select a gender'],
     },
     email: {
         type: String,
+        required: [true, 'Please provide an email address'],
     },
     city: {
         type: String,
+        required: [true, 'Please provide a city'],
     },
     address: {
         type: String,
+        required: [true, 'Please provide an address'],
     },
     status: {
         type: String,

@@ -69,7 +69,10 @@ export default function Dashboard() {
     }, [router]);
 
     const handleCopyLink = (linkNumber: number) => {
-        const link = `${ORG_LINK_PREFIX}${linkNumber === 1 ? 'r' : 'g'}`;
+        const link = typeof window !== 'undefined'
+            ? `${window.location.origin}/registration/${userData?.userId}`
+            : `https://shree-sarthak.vercel.app/registration/${userData?.userId}`;
+
         copyToClipboard(link);
         setCopiedLink(linkNumber);
         setTimeout(() => setCopiedLink(null), 2000);
@@ -130,9 +133,13 @@ export default function Dashboard() {
         },
         distributor: {
             name: userData.applicantName || 'User',
-            sponsorId: userData.sponsorId || 'N/A'
+            sponsorId: userData.userId || 'N/A'
         }
     };
+
+    const registrationLink = typeof window !== 'undefined'
+        ? `${window.location.origin}/registration/${userData.userId}`
+        : `https://shree-sarthak.vercel.app/registration/${userData.userId}`;
 
     return (
         <div className="min-h-screen bg-amber-50 flex flex-col">
@@ -223,7 +230,7 @@ export default function Dashboard() {
                             <div className="flex-1 flex gap-4">
                                 <input
                                     type="text"
-                                    value={`${ORG_LINK_PREFIX}r`}
+                                    value={registrationLink}
                                     readOnly
                                     className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
                                 />
@@ -237,7 +244,7 @@ export default function Dashboard() {
                             <div className="flex-1 flex gap-4">
                                 <input
                                     type="text"
-                                    value={`${ORG_LINK_PREFIX}g`}
+                                    value={registrationLink}
                                     readOnly
                                     className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
                                 />
