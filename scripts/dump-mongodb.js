@@ -7,7 +7,7 @@ const dummyUsers = [
         userId: 'SSE-20121985',
         applicantName: 'Dilip Kumar',
         email: 'dilip@example.com',
-        mobileNumber: '9876543210',
+        mobileNumber: '55',
         status: 'Active',
         createdAt: new Date()
     },
