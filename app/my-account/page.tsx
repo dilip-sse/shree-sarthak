@@ -167,76 +167,73 @@ export default function MyAccount() {
                     </div>
 
                     {/* User Profile Card */}
-                    <div className="bg-white rounded-lg shadow-md p-6 md:p-10 mb-8">
-                        <div className="flex flex-col md:flex-row items-start gap-6 md:gap-8 mb-8">
-                            {/* Profile Avatar */}
-                            <div className="w-24 h-24 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
-                                {dashboardData.user.name.split(' ').map((n: string) => n[0]).join('')}
-                            </div>
-
-                            {/* User Info */}
-                            <div className="flex-1">
-                                <h2 className="text-2xl font-bold text-amber-950 mb-2">
-                                    {dashboardData.user.name}
-                                </h2>
-                                <div className="space-y-1 text-amber-900">
+                    {/* User Profile Card */}
+                    <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {/* Column 1: Profile & Basic Info */}
+                            <div className="flex flex-col items-start gap-4">
+                                <div className="flex items-center gap-4 mb-2">
+                                    <div className="w-20 h-20 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg flex-shrink-0">
+                                        {dashboardData.user.name.split(' ').map((n: string) => n[0]).join('')}
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl font-bold text-amber-950 leading-tight">
+                                            {dashboardData.user.name}
+                                        </h2>
+                                        <div className="mt-1">
+                                            <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1 w-fit">
+                                                <span className="w-1.5 h-1.5 bg-green-600 rounded-full animate-pulse"></span>
+                                                {dashboardData.user.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 text-amber-900 text-sm w-full">
                                     <p className="flex items-center gap-2">
-                                        <span className="text-lg">📧</span>
-                                        <span>{dashboardData.user.email}</span>
+                                        <span className="text-lg w-6">�</span>
+                                        <span className="truncate" title={dashboardData.user.email}>{dashboardData.user.email}</span>
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <span className="text-lg">📱</span>
+                                        <span className="text-lg w-6">📱</span>
                                         <span>{dashboardData.user.phone}</span>
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <span className="text-lg">🆔</span>
-                                        <span className="font-semibold">Member ID: {dashboardData.user.userId}</span>
+                                        <span className="text-lg w-6">🆔</span>
+                                        <span className="font-semibold">ID: {dashboardData.user.userId}</span>
                                     </p>
                                 </div>
                             </div>
 
-                            {/* Status Badge */}
-                            <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold flex items-center gap-2">
-                                <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
-                                {dashboardData.user.status}
-                            </div>
-                        </div>
-
-                        {/* Divider */}
-                        <div className="border-t-2 border-amber-100 my-8"></div>
-
-                        {/* Account Details Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                            {/* Membership Info */}
-                            <div className="bg-amber-50 p-6 rounded-lg">
-                                <h3 className="font-bold text-amber-950 mb-4 text-lg">Membership Information</h3>
-                                <div className="space-y-3 text-sm">
-                                    <div className="flex justify-between">
+                            {/* Column 2: Membership Info */}
+                            <div className="bg-amber-50 p-5 rounded-lg h-full">
+                                <h3 className="font-bold text-amber-950 mb-3 text-base border-b border-amber-200 pb-2">Membership Information</h3>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between items-center">
                                         <span className="text-amber-800">Reward Rank:</span>
                                         <span className="font-semibold text-amber-950">{dashboardData.user.rewardRank}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between items-center">
                                         <span className="text-amber-800">Joined Date:</span>
-                                        <span className="font-semibold text-amber-950">{dashboardData.idStatus.doi}</span>
+                                        <span className="font-semibold text-amber-950 text-right">{dashboardData.idStatus.doi}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between items-center">
                                         <span className="text-amber-800">Member Since:</span>
-                                        <span className="font-semibold text-amber-950">{dashboardData.idStatus.doi}</span>
+                                        <span className="font-semibold text-amber-950 text-right">{dashboardData.idStatus.doi}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Contact Info */}
-                            <div className="bg-amber-50 p-6 rounded-lg">
-                                <h3 className="font-bold text-amber-950 mb-4 text-lg">Contact Information</h3>
-                                <div className="space-y-3 text-sm">
+                            {/* Column 3: Contact Info */}
+                            <div className="bg-amber-50 p-5 rounded-lg h-full">
+                                <h3 className="font-bold text-amber-950 mb-3 text-base border-b border-amber-200 pb-2">Contact Information</h3>
+                                <div className="space-y-2 text-sm">
                                     <div>
-                                        <span className="text-amber-800 block">Address:</span>
-                                        <span className="font-semibold text-amber-950">{dashboardData.user.address}</span>
+                                        <span className="text-amber-800 block mb-1">Address:</span>
+                                        <span className="font-semibold text-amber-950 block leading-snug">{dashboardData.user.address}</span>
                                     </div>
-                                    <div>
-                                        <span className="text-amber-800 block">City:</span>
-                                        <span className="font-semibold text-amber-950">{dashboardData.user.city}</span>
+                                    <div className="mt-3">
+                                        <span className="text-amber-800 block mb-1">City:</span>
+                                        <span className="font-semibold text-amber-950 block">{dashboardData.user.city}</span>
                                     </div>
                                 </div>
                             </div>
