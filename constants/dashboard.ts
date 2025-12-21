@@ -8,7 +8,7 @@ export const WELCOME_QUOTE = '"Thank You for joining our Journey! Ton can create
 export const SIDEBAR_NAV: NavItem[] = [
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'My Account', href: '/my-account' },
-    { label: 'Joining & Upgrade', href: '#' },
+    { label: 'Registration', href: '/registration' }, // href will be updated dynamically in Sidebar
     { label: 'My Network', href: '/dashboard/network' },
     { label: 'My Team Income', href: '#' },
     { label: 'Help & Support', href: '#' },
