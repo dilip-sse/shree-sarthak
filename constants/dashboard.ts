@@ -6,8 +6,8 @@ export const WELCOME_PREFIX = 'Welcome';
 export const WELCOME_QUOTE = '"Thank You for joining our Journey! Ton can create a better future, Explore, and be a part of something meaningful."';
 
 export const SIDEBAR_NAV: NavItem[] = [
-    { label: 'My Account', href: '/my-account' },
     { label: 'Dashboard', href: '/dashboard' },
+    { label: 'My Account', href: '/my-account' },
     { label: 'Joining & Upgrade', href: '/dashboard/joining' },
     { label: 'My Network', href: '/dashboard/network' },
     { label: 'My Team Income', href: '/dashboard/income' },

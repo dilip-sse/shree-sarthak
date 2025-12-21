@@ -114,7 +114,13 @@ export default function RegistrationPage() {
         <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 py-12 px-4">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-10">
+                <div className="text-center mb-10 relative">
+                    <button
+                        onClick={() => router.push('/')}
+                        className="absolute left-0 top-0 text-amber-900 font-semibold hover:text-amber-700 transition-colors flex items-center gap-2"
+                    >
+                        <span>←</span> Back
+                    </button>
                     <h1 className="text-4xl font-bold text-amber-950 mb-3">Registration Form</h1>
                     <p className="text-amber-800">Sponsor ID: <span className="font-semibold">{sponsorId || 'Loading...'}</span></p>
                 </div>

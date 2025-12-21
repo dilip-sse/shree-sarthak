@@ -5,8 +5,8 @@ export const TAGLINE = 'TOUR AND TRAVELS';
 
 export const NAV_ITEMS: NavItem[] = [
     { label: 'My Account', href: '/my-account' },
-    { label: 'Dands', href: '#dands' },
-    { label: 'Dongi', href: '#dongi' },
+    { label: 'My networks', href: '#my-networks' },
+    { label: 'About Us', href: '#about-us' },
 ];
 
 export const TOUR_CATEGORIES: TourCategory[] = [

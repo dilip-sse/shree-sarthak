@@ -16,6 +16,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Global utility Styles */
+.grid {
+  padding: 8px !important;
+}
+
+input {
+  text-indent: 4px !important;
+}
+
+.bg-white {
+  padding: 8px !important
+}
+
 /* Base spacing for paragraphs and text elements */
 p {
   margin-bottom: 8px;

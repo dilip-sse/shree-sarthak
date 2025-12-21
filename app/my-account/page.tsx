@@ -1,24 +1,153 @@
 'use client';
 
-import Header from '@/components/landing/Header';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
 import Sidebar from '@/components/dashboard/Sidebar';
-import { COMPANY_NAME, CONTACT_INFO } from '@/constants';
-
-// Mock user data
-const USER_DATA = {
-    name: 'Santosh Walanj',
-    email: 'santosh.walanj@example.com',
-    memberId: 'RM5064752',
-    memberSince: 'December 2025',
-    phone: '+91 98765 43210',
-    address: 'Room No: 1085,953 Shree Ganesh Nagar Goan, Dive Mandi Road',
-    city: 'Mirahrhra 421301',
-    status: 'Active',
-    rewardRank: 'New Member',
-    joinedDate: '12-07-2025',
-};
+import Header from '@/components/landing/Header';
+import AccountingStatus from '@/components/dashboard/AccountingStatus';
+import SPDetails from '@/components/dashboard/SPDetails';
+import IDStatus from '@/components/dashboard/IDStatus';
+import DistributorDetails from '@/components/dashboard/DistributorDetails';
+import {
+    COMPANY_NAME,
+    TAGLINE,
+    LOGIN_BUTTON_TEXT,
+    CONTACT_INFO,
+} from '@/constants';
+import {
+    SUCCESS_MESSAGE,
+    WELCOME_PREFIX,
+    WELCOME_QUOTE,
+    ORG_LINK_PREFIX,
+    COPY_ORG1_BTN,
+    COPY_ORG2_BTN,
+    REWARD_RANK_LABEL,
+    LEFT_SP_LABEL,
+    RIGHT_SP_LABEL,
+    TOP_NAV,
+} from '@/constants/dashboard';
+import { getCurrentUser, getUserData, isLoggedIn, logout } from '@/lib/auth';
+import { copyToClipboard } from '@/lib/utils';
 
 export default function MyAccount() {
+    const router = useRouter();
+    const [userData, setUserData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [copiedLink, setCopiedLink] = useState<number | null>(null);
+
+    useEffect(() => {
+        const initializeDashboard = async () => {
+            // Check if user is logged in
+            if (!isLoggedIn()) {
+                router.push('/login');
+                return;
+            }
+
+            // Get current user session
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                try {
+                    // Fetch full user data from MongoDB
+                    const response = await fetch(`/api/users/${currentUser.userId}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        setUserData(data.user);
+                    } else {
+                        console.error('User data not found in MongoDB');
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch dashboard user data:', error);
+                }
+            }
+            setLoading(false);
+        };
+
+        initializeDashboard();
+    }, [router]);
+
+    const handleCopyLink = (linkNumber: number) => {
+        const link = typeof window !== 'undefined'
+            ? `${window.location.origin}/registration/${userData?.userId}`
+            : `https://shree-sarthak.vercel.app/registration/${userData?.userId}`;
+
+        copyToClipboard(link);
+        setCopiedLink(linkNumber);
+        setTimeout(() => setCopiedLink(null), 2000);
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-amber-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="text-4xl mb-4 text-amber-900">⏳</div>
+                    <p className="text-amber-900 font-semibold">Loading dashboard...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!userData) {
+        return (
+            <div className="min-h-screen bg-amber-50 flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-amber-900">User data not found. Please log in again.</p>
+                    <Link href="/login" className="text-orange-600 underline mt-4 inline-block">Go to Login</Link>
+                </div>
+            </div>
+        );
+    }
+
+    // Create dashboard data from user data
+    const dashboardData = {
+        user: {
+            name: userData.applicantName || 'User',
+            rewardRank: 'New Member',
+            userId: userData.userId || 'User',
+            email: userData.email || 'User',
+            phone: userData.phone || 'User',
+            status: userData.status || 'User',
+            registeredAt: userData.registeredAt || 'User',
+            address: userData.address || 'N/A',
+            city: userData.city || 'N/A',
+            leftSP: '0.0',
+            rightSP: '0.0'
+        },
+        accounting: {
+            productFundBalance: '0.00',
+            conOfferBalance: '0.00',
+            grossIncome: '0.00'
+        },
+        spDetails: {
+            fresh: '0.00 / 0.0',
+            cf: '0 / 0',
+            directSP: '0 / 0',
+            selfSP: '0.00'
+        },
+        idStatus: {
+            status: 'Active' as const,
+            doi: userData.registeredAt ? (
+                new Date(userData.registeredAt).toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                }) + ' ' + new Date(userData.registeredAt).toLocaleTimeString('en-IN')
+            ) : 'N/A',
+            doa: '',
+            validityDate: '00-00-0000'
+        },
+        distributor: {
+            // name: userData.applicantName || 'User',
+            sponsorId: userData.sponsorId || 'N/A'
+        }
+    };
+
+    const registrationLink = typeof window !== 'undefined'
+        ? `${window.location.origin}/registration/${userData.userId}`
+        : `https://shree-sarthak.vercel.app/registration/${userData.userId}`;
+
     return (
         <div className="min-h-screen bg-amber-50 flex flex-col">
             {/* Fixed Header */}
@@ -42,26 +171,26 @@ export default function MyAccount() {
                         <div className="flex flex-col md:flex-row items-start gap-6 md:gap-8 mb-8">
                             {/* Profile Avatar */}
                             <div className="w-24 h-24 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
-                                {USER_DATA.name.split(' ').map(n => n[0]).join('')}
+                                {dashboardData.user.name.split(' ').map((n: string) => n[0]).join('')}
                             </div>
 
                             {/* User Info */}
                             <div className="flex-1">
                                 <h2 className="text-2xl font-bold text-amber-950 mb-2">
-                                    {USER_DATA.name}
+                                    {dashboardData.user.name}
                                 </h2>
                                 <div className="space-y-1 text-amber-900">
                                     <p className="flex items-center gap-2">
                                         <span className="text-lg">📧</span>
-                                        <span>{USER_DATA.email}</span>
+                                        <span>{dashboardData.user.email}</span>
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <span className="text-lg">📱</span>
-                                        <span>{USER_DATA.phone}</span>
+                                        <span>{dashboardData.user.phone}</span>
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <span className="text-lg">🆔</span>
-                                        <span className="font-semibold">Member ID: {USER_DATA.memberId}</span>
+                                        <span className="font-semibold">Member ID: {dashboardData.user.userId}</span>
                                     </p>
                                 </div>
                             </div>
@@ -69,7 +198,7 @@ export default function MyAccount() {
                             {/* Status Badge */}
                             <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold flex items-center gap-2">
                                 <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
-                                {USER_DATA.status}
+                                {dashboardData.user.status}
                             </div>
                         </div>
 
@@ -84,15 +213,15 @@ export default function MyAccount() {
                                 <div className="space-y-3 text-sm">
                                     <div className="flex justify-between">
                                         <span className="text-amber-800">Reward Rank:</span>
-                                        <span className="font-semibold text-amber-950">{USER_DATA.rewardRank}</span>
+                                        <span className="font-semibold text-amber-950">{dashboardData.user.rewardRank}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-amber-800">Joined Date:</span>
-                                        <span className="font-semibold text-amber-950">{USER_DATA.joinedDate}</span>
+                                        <span className="font-semibold text-amber-950">{dashboardData.idStatus.doi}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-amber-800">Member Since:</span>
-                                        <span className="font-semibold text-amber-950">{USER_DATA.memberSince}</span>
+                                        <span className="font-semibold text-amber-950">{dashboardData.idStatus.doi}</span>
                                     </div>
                                 </div>
                             </div>
@@ -103,11 +232,11 @@ export default function MyAccount() {
                                 <div className="space-y-3 text-sm">
                                     <div>
                                         <span className="text-amber-800 block">Address:</span>
-                                        <span className="font-semibold text-amber-950">{USER_DATA.address}</span>
+                                        <span className="font-semibold text-amber-950">{dashboardData.user.address}</span>
                                     </div>
                                     <div>
                                         <span className="text-amber-800 block">City:</span>
-                                        <span className="font-semibold text-amber-950">{USER_DATA.city}</span>
+                                        <span className="font-semibold text-amber-950">{dashboardData.user.city}</span>
                                     </div>
                                 </div>
                             </div>
@@ -115,31 +244,34 @@ export default function MyAccount() {
                     </div>
 
                     {/* Organization Links */}
-                    <div className="mb-8">
-                        <h3 className="text-xl md:text-2xl font-bold text-amber-950 mb-6">Organization Links</h3>
-                        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-                            <div className="flex-1 flex gap-4">
-                                <input
-                                    type="text"
-                                    value="http://www.myriyansh.com/r/gr"
-                                    readOnly
-                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
-                                />
-                                <button className="bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap">
-                                    Copy Org 1 Link
-                                </button>
-                            </div>
-                            <div className="flex-1 flex gap-4">
-                                <input
-                                    type="text"
-                                    value="http://www.myriyansh.com/r/gg"
-                                    readOnly
-                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
-                                />
-                                <button className="bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap">
-                                    Copy Org 2 Link
-                                </button>
-                            </div>
+                    <div className="flex flex-col md:flex-row gap-6 mb-8">
+                        <div className="flex-1 flex gap-4">
+                            <input
+                                type="text"
+                                value={registrationLink}
+                                readOnly
+                                className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
+                            />
+                            <button
+                                onClick={() => handleCopyLink(1)}
+                                className={`${copiedLink === 1 ? 'bg-green-600' : 'bg-orange-600'} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-colors whitespace-nowrap`}
+                            >
+                                {copiedLink === 1 ? 'Copied!' : COPY_ORG1_BTN}
+                            </button>
+                        </div>
+                        <div className="flex-1 flex gap-4">
+                            <input
+                                type="text"
+                                value={registrationLink}
+                                readOnly
+                                className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
+                            />
+                            <button
+                                onClick={() => handleCopyLink(2)}
+                                className={`${copiedLink === 2 ? 'bg-green-600' : 'bg-orange-600'} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-colors whitespace-nowrap`}
+                            >
+                                {copiedLink === 2 ? 'Copied!' : COPY_ORG2_BTN}
+                            </button>
                         </div>
                     </div>
 
@@ -229,18 +361,7 @@ export default function MyAccount() {
 
                     {/* Quick Actions */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                        <button className="bg-amber-900 text-white p-6 rounded-lg font-semibold hover:bg-amber-800 transition-colors flex items-center justify-center gap-2">
-                            <span className="text-xl">✏️</span>
-                            Edit Profile
-                        </button>
-                        <button className="bg-amber-900 text-white p-4 rounded-lg font-semibold hover:bg-amber-800 transition-colors flex items-center justify-center gap-2">
-                            <span className="text-xl">🔒</span>
-                            Change Password
-                        </button>
-                        <button className="bg-red-600 text-white p-6 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
-                            <span className="text-xl">🚪</span>
-                            Logout
-                        </button>
+
                     </div>
                 </main>
             </div>

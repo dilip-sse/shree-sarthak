@@ -49,7 +49,13 @@ export default function LoginPage() {
         <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex items-center justify-center p-6">
             <div className="w-full max-w-md">
                 {/* Logo and Header */}
-                <div className="text-center mb-8">
+                <div className="text-center mb-8 relative">
+                    <button
+                        onClick={() => router.push('/')}
+                        className="absolute left-0 top-0 text-amber-900 font-semibold hover:text-amber-700 transition-colors flex items-center gap-2"
+                    >
+                        <span>←</span> Back
+                    </button>
                     <div className="flex justify-center mb-6">
                         <Image
                             src="/images/logo.png"

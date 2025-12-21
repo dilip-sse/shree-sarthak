@@ -3,21 +3,35 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { NAV_ITEMS, LOGIN_BUTTON_TEXT } from '@/constants';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { isLoggedIn, logout } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isAuth, setIsAuth] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        setIsAuth(isLoggedIn());
+    }, []);
+
+    const handleLogout = () => {
+        logout();
+        setIsAuth(false);
+        router.push('/');
+    };
 
     return (
-        <header className="sticky top-0 bg-amber-50 px-6 md:px-12 py-6 flex items-center justify-between shadow-md z-50">
+        <header className="sticky top-0 bg-amber-50 px-6 md:px-12 h-[120px] flex items-center justify-between shadow-md z-50">
             {/* Logo */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 h-full">
                 <Image
                     src="/images/logo.png"
                     alt="Shree Sarthak Enterprises Logo"
-                    width={160}
-                    height={160}
-                    className="w-32 h-32 md:w-40 md:h-40"
+                    width={120}
+                    height={120}
+                    className="w-auto h-3/4 object-contain"
                 />
             </div>
 
@@ -34,13 +48,32 @@ export default function Header() {
                 ))}
             </nav>
 
-            {/* Login Button */}
-            <Link
-                href="/dashboard"
-                className="hidden md:block bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors"
-            >
-                {LOGIN_BUTTON_TEXT}
-            </Link>
+            {/* Auth Buttons */}
+            <div className="hidden md:flex items-center gap-4">
+                {!isAuth ? (
+                    <>
+                        <Link
+                            href="/login"
+                            className="bg-amber-800 text-white px-6 py-2 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
+                        >
+                            Login
+                        </Link>
+                        <Link
+                            href="/registration/new"
+                            className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-500 transition-colors"
+                        >
+                            Registration
+                        </Link>
+                    </>
+                ) : (
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-500 transition-colors"
+                    >
+                        Logout
+                    </button>
+                )}
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -67,13 +100,34 @@ export default function Header() {
                                 {item.label}
                             </Link>
                         ))}
-                        <Link
-                            href="/dashboard"
-                            className="bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold text-center mt-2"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            {LOGIN_BUTTON_TEXT}
-                        </Link>
+                        {!isAuth ? (
+                            <>
+                                <Link
+                                    href="/login"
+                                    className="bg-amber-800 text-white px-6 py-3 rounded-lg font-semibold text-center mt-2"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    href="/registration/new"
+                                    className="bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold text-center mt-2"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Registration
+                                </Link>
+                            </>
+                        ) : (
+                            <button
+                                onClick={() => {
+                                    handleLogout();
+                                    setIsMenuOpen(false);
+                                }}
+                                className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold text-center mt-2"
+                            >
+                                Logout
+                            </button>
+                        )}
                     </nav>
                 </div>
             )}
