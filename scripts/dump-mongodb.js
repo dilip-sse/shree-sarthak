@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const MONGODB_URI = 'mongodb+srv://dilipsse_db_user:fGrZZTPqI3CwpaE1@cluster0.dxnpfxe.mongodb.net/';
 
-const dummyUsers = [
+const dummdyUsers = [
     {
         userId: 'SSE-20121985',
         applicantName: 'Dilip Kumar',
