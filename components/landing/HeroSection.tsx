@@ -1,14 +1,14 @@
 import ImageFader from '@/components/ui/ImageFader';
 import { COMPANY_NAME, TAGLINE, HERO_IMAGES } from '@/constants';
 
-export default function HeroSection() {
+export default function HeroSection({ compact = false }: { compact?: boolean }) {
     return (
-        <section className="relative mb-12">
+        <section className={`relative ${compact ? 'mb-6' : 'mb-12'}`}>
             {/* Image Fader Background */}
             <ImageFader
                 images={HERO_IMAGES}
                 interval={5000}
-                className="w-full h-[400px] md:h-[600px]"
+                className={`w-full ${compact ? 'h-[200px] md:h-[300px]' : 'h-[400px] md:h-[600px]'}`}
                 alt="Hero banner"
             />
 

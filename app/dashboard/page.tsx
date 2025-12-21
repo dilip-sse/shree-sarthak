@@ -10,6 +10,8 @@ import AccountingStatus from '@/components/dashboard/AccountingStatus';
 import SPDetails from '@/components/dashboard/SPDetails';
 import IDStatus from '@/components/dashboard/IDStatus';
 import DistributorDetails from '@/components/dashboard/DistributorDetails';
+import HeroSection from '@/components/landing/HeroSection';
+import TourCategories from '@/components/landing/TourCategories';
 import {
     COMPANY_NAME,
     TAGLINE,
@@ -36,6 +38,7 @@ export default function Dashboard() {
     const [userData, setUserData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [copiedLink, setCopiedLink] = useState<number | null>(null);
+    const [showBanner, setShowBanner] = useState(true);
 
     useEffect(() => {
         const initializeDashboard = async () => {
@@ -67,6 +70,14 @@ export default function Dashboard() {
 
         initializeDashboard();
     }, [router]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowBanner(false);
+        }, 10000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleCopyLink = (linkNumber: number) => {
         const link = typeof window !== 'undefined'
@@ -146,12 +157,16 @@ export default function Dashboard() {
         ? `${window.location.origin}/registration/${userData.userId}`
         : `https://shree-sarthak.vercel.app/registration/${userData.userId}`;
 
+
+
     return (
         <div className="min-h-screen bg-amber-50 flex flex-col">
             {/* Success Banner */}
-            <div className="bg-orange-600 text-white text-center py-3 px-4">
-                <p className="font-semibold">{SUCCESS_MESSAGE}</p>
-            </div>
+            {showBanner && (
+                <div className="bg-orange-600 text-white text-center py-3 px-4 transition-all duration-500 ease-in-out">
+                    <p className="font-semibold">{SUCCESS_MESSAGE}</p>
+                </div>
+            )}
 
             {/* Top Header - Sticky */}
             <header className="sticky top-0 bg-amber-50 px-4 md:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-amber-200 z-50">
@@ -196,82 +211,24 @@ export default function Dashboard() {
             <div className="flex flex-col md:flex-row flex-1 min-h-0">
                 <Sidebar />
 
-                <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+                <main className="flex-1 p-8 md:p-12 overflow-y-auto bg-amber-50">
                     {/* Welcome Section */}
-                    <div className="mb-10">
-                        <div className="flex justify-between items-center mb-6">
-                            <h1 className="text-2xl md:text-3xl font-bold text-amber-950">
-                                {WELCOME_PREFIX} '{dashboardData.user.name}'
-                            </h1>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div className="bg-white p-6 rounded-lg shadow-sm">
-                                <div className="text-sm text-amber-900 mb-2">{REWARD_RANK_LABEL}</div>
-                                <div className="font-semibold text-amber-950">
-                                    {dashboardData.user.rewardRank}
-                                </div>
-                            </div>
-                            <div className="bg-white p-6 rounded-lg shadow-sm">
-                                <div className="text-sm text-amber-900 mb-2">{LEFT_SP_LABEL}</div>
-                                <div className="font-semibold text-amber-950">
-                                    {dashboardData.user.leftSP}
-                                </div>
-                            </div>
-                            <div className="bg-white p-6 rounded-lg shadow-sm">
-                                <div className="text-sm text-amber-900 mb-2">{RIGHT_SP_LABEL}</div>
-                                <div className="font-semibold text-amber-950">
-                                    {dashboardData.user.rightSP}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-gradient-to-r from-amber-900 to-amber-950 text-white p-8 rounded-lg mb-8">
-                            <p className="italic text-lg">{WELCOME_QUOTE}</p>
-                        </div>
-
-                        {/* Organization Links */}
-                        <div className="flex flex-col md:flex-row gap-6 mb-8">
-                            <div className="flex-1 flex gap-4">
-                                <input
-                                    type="text"
-                                    value={registrationLink}
-                                    readOnly
-                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
-                                />
-                                <button
-                                    onClick={() => handleCopyLink(1)}
-                                    className={`${copiedLink === 1 ? 'bg-green-600' : 'bg-orange-600'} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-colors whitespace-nowrap`}
-                                >
-                                    {copiedLink === 1 ? 'Copied!' : COPY_ORG1_BTN}
-                                </button>
-                            </div>
-                            <div className="flex-1 flex gap-4">
-                                <input
-                                    type="text"
-                                    value={registrationLink}
-                                    readOnly
-                                    className="flex-1 px-4 py-3 border-2 border-amber-900/20 rounded-lg bg-white text-amber-950"
-                                />
-                                <button
-                                    onClick={() => handleCopyLink(2)}
-                                    className={`${copiedLink === 2 ? 'bg-green-600' : 'bg-orange-600'} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-colors whitespace-nowrap`}
-                                >
-                                    {copiedLink === 2 ? 'Copied!' : COPY_ORG2_BTN}
-                                </button>
-                            </div>
-                        </div>
+                    <div className="mb-8">
+                        <h1 className="text-2xl md:text-3xl font-bold text-amber-950">
+                            {WELCOME_PREFIX} '{dashboardData.user.name}'
+                        </h1>
+                        <p className="text-amber-800 mt-2">Welcome back to your dashboard.</p>
                     </div>
 
-                    {/* Dashboard Cards Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        <AccountingStatus data={dashboardData.accounting} />
-                        <SPDetails data={dashboardData.spDetails} />
-                        <IDStatus data={dashboardData.idStatus} />
+                    {/* Reuse Landing Page Content */}
+                    <div className="rounded-xl overflow-hidden shadow-sm mb-8">
+                        <HeroSection compact={true} />
                     </div>
 
-                    {/* Distributor Details */}
-                    <DistributorDetails data={dashboardData.distributor} />
+                    <div>
+                        <h2 className="text-xl font-bold text-amber-950 mt-12 px-2">Our Tour Categories</h2>
+                        <TourCategories compact={true} />
+                    </div>
                 </main>
             </div>
 

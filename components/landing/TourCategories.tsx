@@ -1,17 +1,17 @@
 import Image from 'next/image';
 import { TOUR_CATEGORIES } from '@/constants';
 
-export default function TourCategories() {
+export default function TourCategories({ compact = false }: { compact?: boolean }) {
     return (
-        <section className="bg-amber-900 py-16 md:py-20 px-6 md:px-12 mb-0">
-            <div className="max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <section className={`${compact ? 'py-4 px-0' : 'bg-amber-900 py-16 md:py-20 px-6 md:px-12'} mb-0`}>
+            <div className={compact ? 'w-full' : 'max-w-7xl mx-auto'}>
+                <div className={`grid ${compact ? 'grid-cols-2 md:grid-cols-3 gap-4' : 'grid-cols-1 md:grid-cols-3 gap-8 md:gap-10'}`}>
                     {TOUR_CATEGORIES.map((category) => (
                         <div
                             key={category.id}
                             className="group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
                         >
-                            <div className="relative h-64 md:h-72 overflow-hidden">
+                            <div className={`relative ${compact ? 'h-32 md:h-36' : 'h-64 md:h-72'} overflow-hidden`}>
                                 <Image
                                     src={category.image}
                                     alt={category.alt}
