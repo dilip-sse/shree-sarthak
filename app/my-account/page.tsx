@@ -139,7 +139,7 @@ export default function MyAccount() {
             validityDate: '00-00-0000'
         },
         distributor: {
-            // name: userData.applicantName || 'User',
+            name: 'N/A', // TODO: Fetch sponsor name
             sponsorId: userData.sponsorId || 'N/A'
         }
     };
