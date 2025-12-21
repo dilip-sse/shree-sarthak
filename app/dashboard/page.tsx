@@ -201,7 +201,7 @@ export default function Dashboard() {
                         logout();
                         router.push('/login');
                     }}
-                    className="bg-orange-600 text-white px-6 py-2 w-60 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                    className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
                 >
                     Logout
                 </button>
