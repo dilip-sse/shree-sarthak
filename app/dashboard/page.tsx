@@ -105,6 +105,11 @@ export default function Dashboard() {
         user: {
             name: userData.applicantName || 'User',
             rewardRank: 'New Member',
+            userId: userData.userId || 'User',
+            email: userData.email || 'User',
+            phone: userData.phone || 'User',
+            status: userData.status || 'User',
+            registeredAt: userData.registeredAt || 'User',
             leftSP: '0.0',
             rightSP: '0.0'
         },
@@ -132,8 +137,8 @@ export default function Dashboard() {
             validityDate: '00-00-0000'
         },
         distributor: {
-            name: userData.applicantName || 'User',
-            sponsorId: userData.userId || 'N/A'
+            // name: userData.applicantName || 'User',
+            sponsorId: userData.sponsorId || 'N/A'
         }
     };
 
@@ -143,6 +148,88 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-amber-50 flex flex-col">
+
+            {/* Page Header */}
+            <div className="mb-10">
+                <h1 className="text-3xl md:text-4xl font-bold text-amber-950 mb-4">
+                    My Account
+                </h1>
+                <p className="text-amber-800 text-base md:text-lg">View and manage your account information</p>
+            </div>
+
+            {/* User Profile Card */}
+            <div className="bg-white rounded-lg shadow-md p-6 md:p-10 mb-8">
+                <div className="flex flex-col md:flex-row items-start gap-6 md:gap-8 mb-8">
+                    {/* Profile Avatar */}
+                    <div className="w-24 h-24 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                        {dashboardData.user.name.split(' ').map(n => n[0]).join('')}
+                    </div>
+
+                    {/* User Info */}
+                    <div className="flex-1">
+                        <h2 className="text-2xl font-bold text-amber-950 mb-2">
+                            {dashboardData.user.name}
+                        </h2>
+                        <div className="space-y-1 text-amber-900">
+                            <p className="flex items-center gap-2">
+                                <span className="text-lg">📧</span>
+                                <span>{dashboardData.user.email}</span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                                <span className="text-lg">📱</span>
+                                <span>{dashboardData.user.phone}</span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                                <span className="text-lg">🆔</span>
+                                <span className="font-semibold">Member ID: {dashboardData.user.userId}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Status Badge */}
+                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold flex items-center gap-2">
+                        <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
+                        {dashboardData.user.status}
+                    </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t-2 border-amber-100 my-8"></div>
+
+                {/* Account Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    {/* Membership Info */}
+                    <div className="bg-amber-50 p-6 rounded-lg">
+                        <h3 className="font-bold text-amber-950 mb-4 text-lg">Membership Information</h3>
+                        <div className="space-y-3 text-sm">
+                            <div className="flex justify-between">
+                                <span className="text-amber-800">Reward Rank:</span>
+                                <span className="font-semibold text-amber-950">{dashboardData.user.rewardRank}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-amber-800">Joined Date:</span>
+                                <span className="font-semibold text-amber-950">{dashboardData.user.registeredAt}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Contact Info */}
+                    <div className="bg-amber-50 p-6 rounded-lg">
+                        <h3 className="font-bold text-amber-950 mb-4 text-lg">Contact Information</h3>
+                        <div className="space-y-3 text-sm">
+                            <div>
+                                <span className="text-amber-800 block">Address:</span>
+                                <span className="font-semibold text-amber-950">{dashboardData.address}</span>
+                            </div>
+                            <div>
+                                <span className="text-amber-800 block">City:</span>
+                                <span className="font-semibold text-amber-950">{dashboardData.city}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Success Banner */}
             <div className="bg-orange-600 text-white text-center py-3 px-4">
                 <p className="font-semibold">{SUCCESS_MESSAGE}</p>
