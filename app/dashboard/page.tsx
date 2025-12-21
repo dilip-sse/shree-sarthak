@@ -74,7 +74,7 @@ export default function Dashboard() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowBanner(false);
-        }, 10000);
+        }, 5000);
 
         return () => clearTimeout(timer);
     }, []);
