@@ -119,31 +119,32 @@ export default function RegistrationPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#FDF8F3] font-sans selection:bg-amber-100 selection:text-amber-900">
+        <div className="min-h-screen bg-[#1E1108] font-sans selection:bg-amber-600 selection:text-white">
             {/* Background Decorations */}
-            <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-amber-900 to-[#FDF8F3] -z-10"></div>
+            <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-[#2D1B0E] via-[#4A3728] to-[#1E1108] -z-10"></div>
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber-900/10 rounded-full blur-3xl -z-10"></div>
 
             <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
                 {/* Header */}
-                <div className="mb-8 text-white flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div className="mb-8 text-amber-50 flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                         <button
                             onClick={() => router.push('/')}
-                            className="group flex items-center gap-2 text-amber-200 hover:text-white transition-colors mb-4 text-sm font-medium"
+                            className="group flex items-center gap-2 text-amber-400 hover:text-amber-100 transition-colors mb-4 text-sm font-medium"
                         >
                             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Home
                         </button>
                         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">
                             New Registration
                         </h1>
-                        <p className="text-amber-100/80 text-sm md:text-base max-w-xl">
+                        <p className="text-amber-300/70 text-sm md:text-base max-w-xl">
                             Join our growing network. Please ensure all details are correct.
                         </p>
                     </div>
                 </div>
 
                 {/* Main Card */}
-                <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl overflow-hidden border border-amber-100/50">
+                <form onSubmit={handleSubmit} className="bg-[#FFFBF7] rounded-2xl shadow-2xl overflow-hidden border border-[#E6DCCF]">
                     <div className="p-6 md:p-8">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-6">
 
@@ -180,8 +181,8 @@ export default function RegistrationPage() {
                                                     type="button"
                                                     onClick={() => handleGenderChange(option as any)}
                                                     className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${formData.gender === option
-                                                            ? 'bg-white text-amber-900 shadow-sm border border-amber-100'
-                                                            : 'text-amber-700/60 hover:text-amber-800'
+                                                        ? 'bg-white text-amber-900 shadow-sm border border-amber-100'
+                                                        : 'text-amber-700/60 hover:text-amber-800'
                                                         }`}
                                                 >
                                                     {option}
@@ -324,8 +325,8 @@ export default function RegistrationPage() {
                             type="submit"
                             disabled={isLoading}
                             className={`w-full md:w-auto px-10 py-3 rounded-xl font-bold text-base shadow-lg shadow-orange-900/10 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${isLoading
-                                    ? 'bg-amber-400 cursor-not-allowed text-white'
-                                    : 'bg-gradient-to-r from-amber-700 to-amber-900 hover:from-amber-800 hover:to-amber-950 text-white'
+                                ? 'bg-amber-400 cursor-not-allowed text-white'
+                                : 'bg-gradient-to-r from-amber-700 to-amber-900 hover:from-amber-800 hover:to-amber-950 text-white'
                                 }`}
                         >
                             {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
