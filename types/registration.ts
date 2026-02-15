@@ -11,6 +11,7 @@ export interface RegistrationFormData {
     email?: string;
     city?: string;
     address: string;
+    password?: string;
 }
 
 export interface RegisteredUser extends RegistrationFormData {

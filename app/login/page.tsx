@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { login } from '@/lib/auth';
 import { COMPANY_NAME, TAGLINE } from '@/constants';
+import { Loader2, ArrowLeft, LogIn } from 'lucide-react';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -21,18 +21,14 @@ export default function LoginPage() {
         try {
             const response = await fetch('/api/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
 
             const result = await response.json();
 
             if (result.success) {
-                // Store user session in localStorage for front-end access
                 localStorage.setItem('current_user', JSON.stringify(result.user));
-                // Redirect to dashboard
                 router.push('/dashboard');
             } else {
                 setError(result.error || 'Login failed');
@@ -46,109 +42,108 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex items-center justify-center p-6">
-            <div className="w-full max-w-md">
-                {/* Logo and Header */}
+        <div className="min-h-screen bg-white flex items-center justify-center p-4 md:p-6 lg:p-8">
+            <div className="w-full max-w-md animate-in slide-in-from-bottom-4 fade-in duration-700">
+                {/* Header Section */}
                 <div className="text-center mb-8 relative">
                     <button
                         onClick={() => router.push('/')}
-                        className="absolute left-0 top-0 text-amber-900 font-semibold hover:text-amber-700 transition-colors flex items-center gap-2"
+                        className="absolute left-0 top-1 text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-1.5 text-sm font-medium group"
                     >
-                        <span>←</span> Back
+                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                        Back
                     </button>
+
                     <div className="flex justify-center mb-6">
-                        <Image
-                            src="/images/logo.png"
-                            alt="Company Logo"
-                            width={120}
-                            height={120}
-                            className="drop-shadow-lg"
-                        />
+                        <div className="relative">
+                            <div className="absolute inset-0 bg-indigo-500 blur-2xl opacity-20 rounded-full"></div>
+                            <Image
+                                src="/images/logo.png"
+                                alt="Company Logo"
+                                width={80}
+                                height={80}
+                                className="relative drop-shadow-md"
+                            />
+                        </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-amber-950 mb-2">{COMPANY_NAME}</h1>
-                    <p className="text-amber-800">{TAGLINE}</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">{COMPANY_NAME}</h1>
+                    <p className="text-slate-500 text-sm">{TAGLINE}</p>
                 </div>
 
-                {/* Login Card */}
-                <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10">
-                    <h2 className="text-2xl font-bold text-amber-950 mb-6 text-center">Login to Your Account</h2>
-
-                    {/* Error Message */}
-                    {error && (
-                        <div className="bg-red-50 border-2 border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
-                            <p className="text-sm font-semibold">{error}</p>
-                        </div>
-                    )}
-
-                    {/* Login Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Username Field */}
-                        <div>
-                            <label className="block text-amber-950 font-semibold mb-2">
-                                Username (User ID)<span className="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value.toUpperCase().trim())}
-                                placeholder="Enter your User ID (e.g., SSE-12091976)"
-                                required
-                                className="w-full px-4 py-3 border-2 border-amber-200 rounded-lg focus:border-amber-500 focus:outline-none transition-colors"
-                            />
-                            <p className="text-xs text-amber-600 mt-2">Use the User ID you received during registration</p>
+                {/* Card */}
+                <div className="bg-white border border-slate-200 rounded-xl shadow-lg shadow-slate-200/50 overflow-hidden">
+                    <div className="p-6 md:p-8">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                                <LogIn className="w-5 h-5" />
+                            </div>
+                            <h2 className="text-lg font-semibold text-slate-900">Sign in to your account</h2>
                         </div>
 
-                        {/* Password Field */}
-                        <div>
-                            <label className="block text-amber-950 font-semibold mb-2">
-                                Password<span className="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Enter your password"
-                                required
-                                className="w-full px-4 py-3 border-2 border-amber-200 rounded-lg focus:border-amber-500 focus:outline-none transition-colors"
-                            />
-                        </div>
+                        {error && (
+                            <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm font-medium flex items-center gap-2 animate-in fadeIn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                                </svg>
+                                {error}
+                            </div>
+                        )}
 
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl ${loading
-                                ? 'bg-amber-400 cursor-not-allowed'
-                                : 'bg-amber-900 hover:bg-amber-800'
-                                } text-white`}
-                        >
-                            {loading ? 'Logging in...' : 'Login'}
-                        </button>
-                    </form>
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    User ID
+                                </label>
+                                <input
+                                    type="text"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value.toUpperCase().trim())}
+                                    placeholder="SSE-12345678"
+                                    required
+                                    className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-mono"
+                                />
+                            </div>
 
-                    {/* Divider */}
-                    <div className="my-8 flex items-center gap-4">
-                        <div className="flex-1 h-px bg-amber-200"></div>
-                        <span className="text-amber-600 text-sm">OR</span>
-                        <div className="flex-1 h-px bg-amber-200"></div>
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-sm font-medium text-slate-700 leading-none">
+                                        Password
+                                    </label>
+                                    <a href="#" className="text-xs text-indigo-600 hover:text-indigo-700 font-medium">Forgot password?</a>
+                                </div>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                    className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-900 text-white hover:bg-slate-800 h-10 px-4 py-2 w-full mt-2 shadow-md hover:shadow-lg"
+                            >
+                                {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                                {loading ? 'Signing in...' : 'Sign In'}
+                            </button>
+                        </form>
                     </div>
 
-                    {/* Register Link */}
-                    <div className="text-center">
-                        <p className="text-amber-800 mb-3">Don't have an account?</p>
-                        <button
-                            onClick={() => router.push('/')}
-                            className="text-amber-900 font-semibold hover:text-amber-700 transition-colors underline"
-                        >
-                            Contact your sponsor for registration link
-                        </button>
+                    <div className="bg-slate-50 px-8 py-4 border-t border-slate-100 text-center">
+                        <p className="text-sm text-slate-500">
+                            Don't have an account? <button onClick={() => router.push('/')} className="text-indigo-600 hover:underline font-medium hover:text-indigo-700">Get invited</button>
+                        </p>
                     </div>
                 </div>
 
-                {/* Footer Note */}
-                <p className="text-center text-sm text-amber-700 mt-6">
-                    © {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
-                </p>
+                <div className="mt-8 text-center space-y-2">
+                    <p className="text-xs text-slate-400">
+                        Protected by enterprise-grade security.
+                    </p>
+                </div>
             </div>
         </div>
     );

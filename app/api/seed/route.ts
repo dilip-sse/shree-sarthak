@@ -9,6 +9,7 @@ const dummyUsers = [
         email: 'dilip@example.com',
         mobileNumber: '9876543210',
         status: 'Active',
+        password: 'password123',
     },
     {
         userId: 'SSE-15051990',
@@ -16,6 +17,7 @@ const dummyUsers = [
         email: 'sarthak@example.com',
         mobileNumber: '9123456789',
         status: 'Active',
+        password: 'password123',
     },
     {
         userId: 'SSE-01012000',
@@ -23,6 +25,7 @@ const dummyUsers = [
         email: 'rahul@example.com',
         mobileNumber: '9988776655',
         status: 'Pending',
+        password: 'password123',
     },
     {
         userId: 'SSE-10101988',
@@ -30,6 +33,7 @@ const dummyUsers = [
         email: 'anjali@example.com',
         mobileNumber: '9898989898',
         status: 'Active',
+        password: 'password123',
     },
     {
         userId: 'SSE-25121995',
@@ -37,6 +41,7 @@ const dummyUsers = [
         email: 'vikram@example.com',
         mobileNumber: '9765432109',
         status: 'Inactive',
+        password: 'password123',
     }
 ];
 

@@ -40,7 +40,6 @@ const UserSchema = new Schema({
     },
     email: {
         type: String,
-        required: [true, 'Please provide an email address'],
     },
     city: {
         type: String,
@@ -57,6 +56,10 @@ const UserSchema = new Schema({
     registeredAt: {
         type: Date,
         default: Date.now,
+    },
+    password: {
+        type: String,
+        default: '123456', // Default password for existing users
     },
 });
 

@@ -24,14 +24,23 @@ export async function POST(request: Request) {
             }, { status: 401 });
         }
 
-        // Simple check: password is required but for now we accept any non-empty password
-        // as per the requirement in lib/auth.ts (line 48)
-        if (!password) {
+        // Check password if it exists on the user record
+        // Check password logic:
+        // 1. If user has a specific password set, check against that
+        // 2. Also allow global fallbacks '123456' and 'password123' as requested
+        const validPasswords = [user.password, '123456', 'password123'].filter(Boolean);
+
+        if (!validPasswords.includes(password)) {
             return NextResponse.json({
                 success: false,
-                error: 'Password is required'
-            }, { status: 400 });
+                error: 'Invalid password'
+            }, { status: 401 });
         }
+
+        // If user has no password (legacy), we might want to allow them or force reset.
+        // For now, if no password is in DB, we'll allow login (backward compatibility)
+        // unless you want to enforce it.
+        // But since we added a default to the schema, new fetches should have it.
 
         // Prepare session user data (similar to lib/auth.ts CurrentUser)
         const sessionUser = {
